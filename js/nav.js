@@ -25,6 +25,7 @@
   document.querySelectorAll('.header__nav a').forEach(link => {
     link.addEventListener('click', () => {
       burger && burger.classList.remove('open');
+      burger && burger.setAttribute('aria-expanded', 'false');
       header.classList.remove('mobile-open');
     });
   });
