@@ -1,12 +1,24 @@
 # Ecotech — Documentação
 
-Sistema inteligente de irrigação para hortas domésticas com ESP32, sensores e plataforma web.
+Sistema inteligente de irrigação para hortas domésticas com ESP32, sensores, painel em React com JavaScript e comunicação MQTT.
 
 ---
 
 ## O que é
 
-O Ecotech monitora a umidade e temperatura do solo em tempo real e aciona automaticamente uma bomba d'água quando necessário. Os dados são enviados a uma API local e exibidos em um dashboard web.
+O Ecotech monitora a umidade e temperatura do solo em tempo real e aciona automaticamente uma bomba d'água quando necessário. A comunicação utiliza MQTT para a troca de leituras e comandos, e o painel web em React com JavaScript permite acompanhar e controlar a irrigação.
+
+---
+
+## Tecnologias utilizadas
+
+| Tecnologia | Papel no projeto |
+|------------|------------------|
+| ESP32 | Leitura dos sensores e controle da bomba por meio do relé. |
+| React | Interface do painel de monitoramento e controle. |
+| JavaScript | Lógica da interface e atualização dos dados exibidos. |
+| MQTT | Comunicação por publicação e assinatura de mensagens entre os dispositivos e a plataforma. |
+| HTML e CSS | Estrutura e apresentação visual das interfaces web. |
 
 ---
 
@@ -37,42 +49,36 @@ O Ecotech monitora a umidade e temperatura do solo em tempo real e aciona automa
 
 1. ESP32 lê umidade e temperatura a cada 5 segundos.
 2. Se umidade < 30%, a bomba é ligada. Se > 70%, é desligada.
-3. Os dados são enviados via HTTP POST para a API Flask na rede local.
-4. O dashboard consome a API e exibe tudo em tempo real no navegador.
+3. As leituras são publicadas via MQTT e distribuídas por um broker, que encaminha as mensagens aos componentes inscritos nos tópicos correspondentes.
+4. O painel em React com JavaScript apresenta os dados recebidos pela plataforma em tempo real no navegador.
 
 ---
 
 ## Modos de irrigação
 
 - **Automático** — ESP32 decide com base nos limites de umidade configurados.
-- **Manual** — usuário controla pelo dashboard via `POST /api/control`.
+- **Manual** — usuário solicita o acionamento pelo painel; a plataforma envia o comando ao dispositivo via MQTT.
 
 ---
 
-## API Flask — endpoints
+## Comunicação MQTT
 
-| Método | Rota           | Descrição                        |
-|--------|----------------|----------------------------------|
-| GET    | /api/status    | Última leitura dos sensores      |
-| POST   | /api/data      | Recebe dados do ESP32            |
-| GET    | /api/history   | Histórico das últimas 100 leituras |
-| POST   | /api/control   | Controle manual da bomba         |
-| GET    | /api/export    | Exporta histórico em CSV         |
+O MQTT organiza a comunicação em tópicos. Os componentes publicam mensagens ou assinam os tópicos cujas atualizações precisam receber.
+
+| Fluxo | Finalidade |
+|-------|------------|
+| Dispositivo → plataforma | Envio das leituras dos sensores para monitoramento. |
+| Plataforma → dispositivo | Envio dos comandos de irrigação solicitados pelo usuário. |
+
+Os nomes dos tópicos, os formatos das mensagens e a configuração do broker devem ser consultados na implementação atual da plataforma e do firmware.
 
 ---
 
-## Executando o backend
+## Sobre este repositório
 
-```bash
-# Instalar dependências
-pip install flask psycopg2-binary
+Este repositório contém o site de apresentação do Ecotech, desenvolvido em HTML, CSS e JavaScript. O painel React e a implementação da comunicação MQTT não estão incluídos aqui.
 
-# Modo CSV (sem banco externo)
-python main.py
-
-# Modo PostgreSQL
-python app_postgres.py
-```
+Para visualizar o site, abra `index.html` no navegador. A execução do painel e a conexão MQTT dependem das instruções e configurações dos respectivos projetos.
 
 ---
 
@@ -81,17 +87,10 @@ python app_postgres.py
 ```
 Ecotech/
 ├── index.html          # Landing page
-├── docs.html           # Documentação web
 ├── DOCUMENTACAO.md     # Este arquivo
 ├── css/                # Estilos por seção
 ├── js/                 # Scripts (nav, animações)
-├── imgs/               # Logo e favicon
-└── dashboard/          # App de monitoramento
-    ├── index.html
-    ├── app.js
-    ├── style.css
-    ├── main.py         # API Flask (CSV)
-    └── app_postgres.py # API Flask (PostgreSQL)
+└── imgs/               # Logo e favicon
 ```
 
 ---
