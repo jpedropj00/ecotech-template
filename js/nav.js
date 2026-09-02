@@ -1,58 +1,60 @@
-/* ═══════════════════════════════════════
-   NAV — Header scroll + menu mobile
-   ═══════════════════════════════════════ */
+/* Navegação: links nativos preservam foco, URL e histórico. */
 (function () {
   'use strict';
-
   const header = document.querySelector('.header');
   const burger = document.querySelector('.header__burger');
+  if (!header || !burger) return;
 
-  function onScroll() {
+  const mobile = window.matchMedia('(max-width: 960px)');
+  const sections = [...document.querySelectorAll('section[id]')];
+  const links = [...document.querySelectorAll('.header__nav a[href^="#"]')];
+
+  function setMenu(open) {
+    header.classList.toggle('mobile-open', open);
+    burger.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  }
+
+  burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
+  links.forEach(link => link.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      burger.focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!header.contains(event.target)) setMenu(false);
+  });
+  mobile.addEventListener('change', () => setMenu(false));
+  document.documentElement.classList.add('nav-ready');
+
+  function updateNavigation() {
     header.classList.toggle('scrolled', window.scrollY > 40);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  if (burger) {
-    burger.addEventListener('click', () => {
-      const isOpen = burger.classList.toggle('open');
-      header.classList.toggle('mobile-open', isOpen);
-      burger.setAttribute('aria-expanded', isOpen);
+    const marker = header.offsetHeight + 32;
+    let current = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= marker) current = section;
+    }
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      current = sections[sections.length - 1];
+    }
+    links.forEach(link => {
+      const active = current && link.hash === '#' + current.id;
+      link.classList.toggle('active', Boolean(active));
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
     });
   }
 
-  document.querySelectorAll('.header__nav a').forEach(link => {
-    link.addEventListener('click', () => {
-      burger && burger.classList.remove('open');
-      burger && burger.setAttribute('aria-expanded', 'false');
-      header.classList.remove('mobile-open');
-    });
-  });
-
-  /* Scroll suave com offset do header fixo */
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', e => {
-      const target = document.querySelector(anchor.getAttribute('href'));
-      if (!target) return;
-      e.preventDefault();
-      const top = target.getBoundingClientRect().top + window.scrollY - (header.offsetHeight + 16);
-      window.scrollTo({ top, behavior: 'smooth' });
-    });
-  });
-
-  /* Link ativo conforme seção visível */
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.header__nav a[href^="#"]');
-
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
-      });
-    });
-  }, { threshold: 0.35, rootMargin: '-80px 0px -60% 0px' });
-
-  sections.forEach(s => observer.observe(s));
+  let pending = false;
+  function scheduleUpdate() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => { updateNavigation(); pending = false; });
+  }
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  updateNavigation();
 })();

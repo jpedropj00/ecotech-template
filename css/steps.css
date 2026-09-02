@@ -2,7 +2,7 @@
    ETAPAS — Linha do Tempo de Desenvolvimento
    ═══════════════════════════════════════ */
 .etapas {
-  background: var(--bg-escuro);
+  background: var(--bg-dark);
   position: relative;
 }
 
@@ -29,7 +29,7 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(180deg, transparent, var(--borda-verde) 10%, var(--borda-verde) 90%, transparent);
+  background: linear-gradient(180deg, transparent, var(--border-green) 10%, var(--border-green) 90%, transparent);
 }
 
 /* Item de etapa */
@@ -47,8 +47,8 @@
 .etapa-item__marcador {
   width: 56px;
   height: 56px;
-  background: var(--gradiente-cartao);
-  border: 1px solid var(--borda);
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -59,14 +59,14 @@
 }
 
 .etapa-item:hover .etapa-item__marcador {
-  border-color: var(--verde-500);
+  border-color: var(--green-500);
   box-shadow: 0 0 0 4px rgba(34,197,94,0.1);
 }
 
 .etapa-item__marcador-numero {
   font-size: .72rem;
   font-weight: 800;
-  color: var(--verde-400);
+  color: var(--green-400);
 }
 
 /* Corpo do item */
@@ -74,7 +74,7 @@
   flex: 1;
   padding-top: 12px;
   padding-bottom: 20px;
-  border-bottom: 1px solid var(--borda);
+  border-bottom: 1px solid var(--border);
 }
 
 .etapa-item:last-child .etapa-item__corpo { border-bottom: none; }
@@ -84,20 +84,20 @@
   font-weight: 700;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: var(--verde-500);
+  color: var(--green-500);
   margin-bottom: 4px;
 }
 
 .etapa-item__titulo {
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--texto-primario);
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .etapa-item__descricao {
   font-size: .88rem;
-  color: var(--texto-secundario);
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
