@@ -147,7 +147,7 @@
   stroke-width: 8;
   stroke-linecap: round;
   stroke-dasharray: 251;
-  stroke-dashoffset: 251;
+  stroke-dashoffset: 75.3;
   transition: stroke-dashoffset 1.5s var(--ease);
 }
 

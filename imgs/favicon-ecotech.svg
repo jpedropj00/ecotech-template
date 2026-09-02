@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>Ecotech — irrigação inteligente</title>
+  <rect width="64" height="64" rx="16" fill="#0f1923"/>
+  <path d="M32 7C26 16 13 29 13 39a19 19 0 0 0 38 0C51 29 38 16 32 7Z" fill="#22c55e"/>
+  <path d="M23 44C18 30 29 24 43 24c0 14-6 25-20 20Z" fill="#f0fdf4"/>
+  <path d="M23 48 37 32" fill="none" stroke="#0f1923" stroke-width="4" stroke-linecap="round"/>
+</svg>

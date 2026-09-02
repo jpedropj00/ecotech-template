@@ -3,7 +3,11 @@
    ═══════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; scroll-padding-top: 104px; font-size: 16px; }
+
+:focus-visible { outline: 2px solid var(--green-400); outline-offset: 4px; }
+.skip-link { position: fixed; top: 8px; left: 8px; z-index: 200; padding: 12px 20px; background: var(--bg-dark); transform: translateY(-150%); }
+.skip-link:focus { transform: none; }
 
 body {
   font-family: var(--font-sans);
@@ -107,13 +111,13 @@ section { padding-block: var(--section-py); }
   opacity: .45;
 }
 
-.reveal {
+.reveal.is-pending {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity .65s var(--ease), transform .65s var(--ease);
 }
 
-.reveal.visible { opacity: 1; transform: none; }
+.reveal.is-pending.visible { opacity: 1; transform: none; }
 
 .reveal-delay-1 { transition-delay: .1s; }
 .reveal-delay-2 { transition-delay: .2s; }
@@ -133,4 +137,10 @@ section { padding-block: var(--section-py); }
 @media (max-width: 768px) {
   :root { --section-py: 64px; }
   .section-title { font-size: 1.7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .reveal.is-pending { opacity: 1; transform: none; }
 }

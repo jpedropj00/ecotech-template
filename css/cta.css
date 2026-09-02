@@ -54,6 +54,8 @@
 }
 
 .cta__contact-email {
+  max-width: 100%;
+  overflow-wrap: anywhere;
   display: inline-flex;
   align-items: center;
   gap: 8px;

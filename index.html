@@ -17,7 +17,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-  <link rel="icon" href="imgs/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="imgs/favicon-ecotech.svg" type="image/svg+xml" sizes="any" />
+  <link rel="icon" href="imgs/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="imgs/apple-touch-icon.png" sizes="180x180" />
 
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/global.css" />
@@ -32,6 +35,7 @@
 </head>
 
 <body>
+  <a href="#main-content" class="skip-link">Pular para o conteúdo</a>
 
   <!-- ════════════════════════════════════
        HEADER
@@ -45,7 +49,7 @@
           <span class="header__logo-name">Eco<span class="header__logo-name_two">tech</span></span>
         </a>
 
-        <nav class="header__nav" aria-label="Navegação principal">
+        <nav class="header__nav" id="primary-navigation" aria-label="Navegação principal">
           <a href="#about">Nossa Missão</a>
           <a href="#solutions">Soluções</a>
           <a href="#how">Como Funciona</a>
@@ -57,7 +61,7 @@
           Fale conosco →
         </a>
 
-        <button class="header__burger" aria-label="Abrir menu" aria-expanded="false">
+        <button class="header__burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="primary-navigation">
           <span></span><span></span><span></span>
         </button>
 
@@ -66,7 +70,7 @@
   </header>
 
 
-  <main id="main-content">
+  <main id="main-content" tabindex="-1">
 
     <!-- ════════════════════════════════════
          HERO
@@ -358,7 +362,7 @@
           </h2>
           <p class="section-desc">
             ESP32, comunicação MQTT e painel em React com JavaScript —
-            funcionando juntas para que sua horta nunca fique sem atenção.
+            funcionando juntos para que sua horta nunca fique sem atenção.
           </p>
         </header>
 
@@ -508,7 +512,7 @@
           </div>
           <div class="impact__banner-stat">
             <div class="impact__banner-stat-num">
-              <span data-counter data-target="40" data-suffix="%">0%</span>
+              <span data-counter data-target="40" data-suffix="%">40%</span>
             </div>
             <div class="impact__banner-stat-label">redução estimada no<br>desperdício de água</div>
           </div>

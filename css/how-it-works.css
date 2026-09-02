@@ -105,8 +105,10 @@
   .how__grid::before { display: none; }
 
   .how-step {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 8px;
     text-align: left;
     padding: 20px 0;
     border-bottom: 1px solid var(--border);
@@ -115,11 +117,14 @@
   .how-step:last-child { border-bottom: none; }
 
   .how-step__icon {
+    grid-row: 1 / 3;
     width: 56px; height: 56px;
     margin: 0;
     flex-shrink: 0;
     font-size: 1.4rem;
   }
+  .how-step__title { margin-bottom: 0; }
+  .how-step__desc { grid-column: 2; }
 
   .how__modes { grid-template-columns: 1fr; }
 }

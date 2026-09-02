@@ -1,88 +1,74 @@
-/* ═══════════════════════════════════════
-   ANIMATIONS — Scroll reveal + gauge + contador
-   ═══════════════════════════════════════ */
+/* Efeitos opcionais: o conteúdo continua disponível sem JavaScript. */
 (function () {
   'use strict';
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const canObserve = 'IntersectionObserver' in window;
 
-  /* ── Scroll Reveal ───────────────────── */
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-  /* ── Gauge animado (Hero) ────────────── */
-  const gaugeFill = document.querySelector('.hero__gauge-fill');
-
-  if (gaugeFill) {
-    const circumference  = 251;
-    const targetPercent  = 70;
-    const targetOffset   = circumference - (circumference * targetPercent / 100);
-
-    const gaugeObserver = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        gaugeFill.style.strokeDashoffset = targetOffset;
-        gaugeObserver.disconnect();
-      }
-    }, { threshold: 0.5 });
-
-    const gaugeEl = document.querySelector('.hero__gauge');
-    if (gaugeEl) gaugeObserver.observe(gaugeEl);
+  function onceVisible(elements, callback, options) {
+    if (!canObserve || motion.matches) {
+      elements.forEach(callback);
+      return;
+    }
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        callback(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, options);
+    elements.forEach(el => observer.observe(el));
   }
 
-  /* ── Barras animadas do Hero ─────────── */
+  const reveals = document.querySelectorAll('.reveal');
+  if (canObserve && !motion.matches) {
+    reveals.forEach(el => el.classList.add('is-pending'));
+  }
+  onceVisible(reveals, el => el.classList.add('visible'), { threshold: 0.1 });
+
+  const gauge = document.querySelector('.hero__gauge-fill');
+  if (gauge && canObserve && !motion.matches) {
+    gauge.style.strokeDashoffset = '251';
+    onceVisible([gauge], el => { el.style.strokeDashoffset = '75.3'; }, { threshold: 0.1 });
+  }
+
   const barHeights = [35, 55, 42, 70, 60, 78, 65, 48, 82, 70];
   document.querySelectorAll('.hero__bar').forEach((bar, i) => {
     bar.style.height = `${barHeights[i] ?? 50}%`;
   });
 
-  /* ── Contador animado ────────────────── */
   function animateCounter(el) {
-    const target   = parseFloat(el.dataset.target ?? el.textContent);
-    const suffix   = el.dataset.suffix ?? '';
-    const decimals = el.dataset.decimals ? parseInt(el.dataset.decimals) : 0;
-    const duration = 1800;
-    const start    = performance.now();
-
+    const target = Number.parseFloat(el.dataset.target ?? el.textContent);
+    if (!Number.isFinite(target)) return;
+    const suffix = el.dataset.suffix ?? '';
+    const decimals = Math.min(20, Math.max(0, Number.parseInt(el.dataset.decimals, 10) || 0));
+    const finalText = target.toFixed(decimals) + suffix;
+    if (motion.matches || !canObserve) { el.textContent = finalText; return; }
+    const start = performance.now();
     function step(now) {
-      const elapsed  = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased    = 1 - Math.pow(1 - progress, 3);
-      el.textContent = (target * eased).toFixed(decimals) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
+      const progress = Math.min((now - start) / 1800, 1);
+      if (motion.matches || progress === 1) { el.textContent = finalText; return; }
+      el.textContent = (target * (1 - Math.pow(1 - progress, 3))).toFixed(decimals) + suffix;
+      requestAnimationFrame(step);
     }
-
     requestAnimationFrame(step);
   }
+  onceVisible(document.querySelectorAll('[data-counter]'), animateCounter, { threshold: 0.1 });
 
-  const counterObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        counterObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.6 });
-
-  document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
-
-  /* ── Parallax sutil no Hero ──────────── */
   const glows = document.querySelectorAll('.hero__glow-1, .hero__glow-2');
-
-  if (glows.length && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-    window.addEventListener('mousemove', e => {
-      const xR = (e.clientX / window.innerWidth  - 0.5) * 20;
-      const yR = (e.clientY / window.innerHeight - 0.5) * 20;
-
-      glows.forEach((glow, i) => {
-        const f = i === 0 ? 1 : -0.5;
-        glow.style.transform = `translate(${xR * f}px, ${yR * f}px)`;
-      });
-    }, { passive: true });
+  function parallax(event) {
+    if (motion.matches) return;
+    const x = (event.clientX / window.innerWidth - 0.5) * 20;
+    const y = (event.clientY / window.innerHeight - 0.5) * 20;
+    glows.forEach((glow, i) => {
+      const factor = i === 0 ? 1 : -0.5;
+      glow.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+    });
   }
+  if (glows.length) window.addEventListener('mousemove', parallax, { passive: true });
+  motion.addEventListener('change', () => {
+    if (!motion.matches) return;
+    reveals.forEach(el => el.classList.add('visible'));
+    glows.forEach(el => { el.style.transform = ''; });
+    if (gauge) gauge.style.strokeDashoffset = '75.3';
+  });
 })();
