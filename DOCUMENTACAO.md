@@ -1,4 +1,4 @@
-# IrrigAI — Documentação
+# Ecotech — Documentação
 
 Sistema inteligente de irrigação para hortas domésticas com ESP32, sensores e plataforma web.
 
@@ -6,7 +6,7 @@ Sistema inteligente de irrigação para hortas domésticas com ESP32, sensores e
 
 ## O que é
 
-O IrrigAI monitora a umidade e temperatura do solo em tempo real e aciona automaticamente uma bomba d'água quando necessário. Os dados são enviados a uma API local e exibidos em um dashboard web.
+O Ecotech monitora a umidade e temperatura do solo em tempo real e aciona automaticamente uma bomba d'água quando necessário. Os dados são enviados a uma API local e exibidos em um dashboard web.
 
 ---
 
@@ -79,7 +79,7 @@ python app_postgres.py
 ## Estrutura do projeto
 
 ```
-IrrigAI/
+Ecotech/
 ├── index.html          # Landing page
 ├── docs.html           # Documentação web
 ├── DOCUMENTACAO.md     # Este arquivo
@@ -105,4 +105,4 @@ IrrigAI/
 
 ---
 
-© 2025 IrrigAI — Projeto Acadêmico de Pesquisa
+© 2025 Ecotech — Projeto Acadêmico de Pesquisa

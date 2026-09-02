@@ -41,13 +41,13 @@
   <!-- Brilho -->
   <ellipse cx="40" cy="40" rx="2.5" ry="5.5" fill="#bbf7d0" opacity="0.45" transform="rotate(-20 40 40)"/>
 
-  <!-- Texto IrrigAI -->
+  <!-- Texto Ecotech -->
   <text x="98" y="56"
     font-family="Inter, Segoe UI, system-ui, sans-serif"
     font-weight="800"
     font-size="34"
     letter-spacing="-0.03em">
-    <tspan fill="#f1f5f9">Irrig</tspan><tspan fill="#4ade80">AI</tspan>
+    <tspan fill="#f1f5f9">Eco</tspan><tspan fill="#4ade80">tech</tspan>
   </text>
 
   <!-- Subtítulo -->
